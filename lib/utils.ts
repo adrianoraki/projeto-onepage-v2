@@ -1,20 +1,16 @@
 // lib/utils.ts
 
-/**
- * Função simplificada para gerenciar classes sem depender de bibliotecas externas
- * Isso vai fazer o erro de import sumir do seu VS Code.
- */
-export function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(' ');
+// Função para definir a cor baseada no GAP (Estilo Neon da sua imagem)
+export function getCorGap(gap: number) {
+  // Se o GAP for maior ou igual a -0.49 (ex: -0.12), fica Verde Neon
+  if (gap >= -0.49) {
+    return "text-[#00FFD1] font-bold"; 
+  }
+  // Se for menor (ex: -0.51), fica Vermelho/Rosa Neon
+  return "text-[#FF4B91] font-bold";
 }
 
-/**
- * SUA FERRAMENTA DE CORES (O Farol)
- * Baseado na sua regra: >= -0.49% é Verde, abaixo disso é Vermelho.
- */
-export function getCorGap(gap: number) {
-  if (gap >= -0.49) {
-    return 'bg-green-500 text-white font-bold px-2 py-1 rounded'; 
-  }
-  return 'bg-red-500 text-white font-bold px-2 py-1 rounded';
+// Função para ajudar a juntar nomes de classes CSS
+export function cn(...inputs: any[]) {
+  return inputs.filter(Boolean).join(' ');
 }

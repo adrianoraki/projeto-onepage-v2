@@ -1,51 +1,72 @@
 'use client'
 import { useState } from 'react'
 import { LISTA_LOJAS } from '@/lib/lojas'
+import { getCorGap } from '@/lib/utils'
 
 export default function Dashboard() {
   const [regional, setRegional] = useState('NE1')
-  const lojas = LISTA_LOJAS.filter(l => l.regional === regional)
+  const lojasFiltradas = LISTA_LOJAS.filter(l => l.regional === regional)
 
   return (
-    <div className="min-h-screen bg-white p-8 text-black">
-      <header className="mb-8 border-b-4 border-black pb-4">
-        <h1 className="text-4xl font-black">PROJETO ONEPAGE 2026</h1>
-      </header>
+    <div className="flex min-h-screen bg-[#0A0E1A] text-white font-sans">
+      
+      {/* Sidebar Curta Lateral */}
+      <aside className="w-20 border-r border-slate-800 flex flex-col items-center py-8 gap-8 bg-[#0D1224]">
+        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center font-black">OP</div>
+        <button onClick={() => setRegional('NE1')} className={`p-3 rounded-xl transition-all ${regional === 'NE1' ? 'bg-blue-600/20 text-blue-400 border border-blue-500/50' : 'text-slate-500 hover:text-white'}`}>
+          NE1
+        </button>
+        <button onClick={() => setRegional('NE2')} className={`p-3 rounded-xl transition-all ${regional === 'NE2' ? 'bg-purple-600/20 text-purple-400 border border-purple-500/50' : 'text-slate-500 hover:text-white'}`}>
+          NE2
+        </button>
+      </aside>
 
-      <div className="flex gap-4 mb-8">
-        {['NE1', 'NE2'].map(r => (
-          <button 
-            key={r}
-            onClick={() => setRegional(r)}
-            className={`px-8 py-2 font-black border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all active:shadow-none active:translate-x-1 active:translate-y-1 ${
-              regional === r ? 'bg-black text-white' : 'bg-white text-black'
-            }`}
-          >
-            REGIONAL {r}
-          </button>
-        ))}
-      </div>
+      {/* Conteúdo Principal */}
+      <main className="flex-1 p-8 overflow-y-auto">
+        <header className="flex justify-between items-center mb-10">
+          <div>
+            <h1 className="text-sm font-black text-blue-500 uppercase tracking-[0.3em]">Regional {regional}</h1>
+            <p className="text-slate-400 text-xs italic">Total: {lojasFiltradas.length} Unidades</p>
+          </div>
+          <div className="text-right">
+            <h2 className="text-2xl font-black tracking-tighter">PROJETO ONEPAGE 2026</h2>
+          </div>
+        </header>
 
-      <div className="border-2 border-black rounded-lg overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-black text-white">
-            <tr>
-              <th className="p-4 font-bold">Nº — LOJA</th>
-              <th className="p-4 text-center">REGIONAL</th>
-            </tr>
-          </thead>
-          <tbody>
-            {lojas.map(loja => (
-              <tr key={loja.numero} className="border-b border-gray-200 hover:bg-gray-50">
-                <td className="p-4 font-bold text-lg">
-                  <span className="text-blue-600">{loja.numero}</span> — {loja.nome}
-                </td>
-                <td className="p-4 text-center font-mono text-sm">{loja.regional}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+        {/* Grid de Cards Estilo Imagem Enviada */}
+        <div className="grid grid-cols-1 gap-3 max-w-5xl">
+          {lojasFiltradas.map((loja) => {
+            const gapExemplo = -0.12; // Aqui depois virão os dados reais
+            return (
+              <div key={loja.numero} className="bg-[#12182B] border border-slate-800/50 p-4 rounded-xl flex items-center justify-between hover:border-slate-600 transition-all group">
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-slate-500 font-bold uppercase">ID {loja.numero}</span>
+                  <span className="text-lg font-black tracking-tight group-hover:text-blue-400 transition-colors">
+                    {loja.nome.toUpperCase()}
+                  </span>
+                </div>
+
+                <div className="flex gap-12 items-center">
+                  <div className="text-right">
+                    <span className="block text-[10px] text-slate-500 font-bold">NPS</span>
+                    <span className="font-mono font-bold">150</span>
+                  </div>
+                  <div className="text-right w-24">
+                    <span className="block text-[10px] text-slate-500 font-bold uppercase">Brecha</span>
+                    <span className={`font-mono ${getCorGap(gapExemplo)}`}>
+                      {gapExemplo.toFixed(2)} %
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+        
+        <footer className="mt-10 pt-4 border-t border-slate-800/50 text-[10px] text-slate-600 font-bold uppercase tracking-widest">
+          Relatório de Quebra Consolidado
+        </footer>
+      </main>
     </div>
   )
 }
